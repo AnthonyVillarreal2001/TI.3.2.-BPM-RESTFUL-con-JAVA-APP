@@ -300,4 +300,26 @@ public class EurekaService {
             try { if (cn != null) cn.close(); } catch (Exception e) {}
         }
     }
+
+    public double obtenerSaldo(String cuenta) {
+        Connection cn = null;
+        double saldo = -1;
+        try {
+            cn = AccesoDB.getConnection();
+            String sql = "select dec_cuensaldo from cuenta where chr_cuencodigo = ? and vch_cuenestado = 'ACTIVO'";
+            PreparedStatement pstm = cn.prepareStatement(sql);
+            pstm.setString(1, cuenta);
+            ResultSet rs = pstm.executeQuery();
+            if (rs.next()) {
+                saldo = rs.getDouble("dec_cuensaldo");
+            }
+            rs.close();
+            pstm.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        } finally {
+            try { if (cn != null) cn.close(); } catch (Exception e) {}
+        }
+        return saldo;
+    }
 }

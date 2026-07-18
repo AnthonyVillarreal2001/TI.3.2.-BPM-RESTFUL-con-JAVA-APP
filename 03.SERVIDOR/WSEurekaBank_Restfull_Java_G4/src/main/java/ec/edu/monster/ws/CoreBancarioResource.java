@@ -111,6 +111,25 @@ public class CoreBancarioResource {
         }
     }
 
+    // ========= SALDO =========
+    @GET
+    @Path("saldo")
+    public Response obtenerSaldo(@QueryParam("cuenta") String cuenta) {
+        try {
+            double saldo = service.obtenerSaldo(cuenta);
+            if (saldo == -1) {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("{\"error\":\"Cuenta no encontrada o inactiva\"}")
+                        .build();
+            }
+            return Response.ok("{\"saldo\":" + saldo + "}").build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("{\"error\":\"" + e.getMessage() + "\"}")
+                    .build();
+        }
+    }
+
     @GET
     @Path("ping")
     public Response ping() {
